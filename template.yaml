@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  API for serving uuids
+
+Resources:
+  UuidFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: uuidserver
+      Runtime: provided.al2023
+      Architectures: [arm64]
+      Events:
+        CatchAll:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref UuidApi
+
+  UuidApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Description: API for serving uuids
+      Domain:
+        CertificateArn: !Ref Certificate
+        DomainName: "uuid.shogo82148.com"
+        Route53:
+          HostedZoneName: "shogo82148.com."
+          IpV6: true
+      CorsConfiguration: true
+
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: "uuid.shogo82148.com"
+      ValidationMethod: "DNS"
+      DomainValidationOptions:
+        - DomainName: "uuid.shogo82148.com"
+          HostedZoneId: Z1TR8BQNS8S1I7
