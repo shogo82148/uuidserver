@@ -34,7 +34,7 @@ func faviconHandler(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("GET /favicon.ico", faviconHandler)
-	http.Handle("GET /", UUIDHandlerFunc(uuid.New))
+	http.Handle("GET /{$}", UUIDHandlerFunc(uuid.New))
 	http.Handle("GET /v4", UUIDHandlerFunc(uuid.NewV4))
 	http.Handle("GET /v7", UUIDHandlerFunc(uuid.NewV7))
 	http.Handle("GET /nil", UUIDHandlerFunc(uuid.Nil))
